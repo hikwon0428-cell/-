@@ -205,7 +205,7 @@ function reviewList() {
   return out.sort((a, b) => b.p - a.p).slice(0, 12);
 }
 function trendView() {
-  const keys = monthKeys(); if (!keys.length) return `<div class="panel empty">기록이 쌓이면 여기서 달별 흐름을 보여줘요.</div>`;
+  const keys = monthKeys(); if (!keys.length) return `<div class="panel empty">기록이 쌓이면 여기서 달별 흐름을 보여줘요.</div>${importPanel()}`;
   const data = keys.map((k) => { const m = S.months[k]; const v = sum(S.expenses.filter((e) => e.month === k).map((e) => e.amount)); return { k, v, f: Number(m.fixedTotal) || 0, p: m.parking }; });
   const max = Math.max(1, ...data.map((d) => d.v + Math.max(0, d.f)));
   const W = 640, H = 250, L = 46, B = 26, T = 30, bw = (W - L - 8) / data.length;
@@ -379,12 +379,12 @@ function showSignedIn(on) {
   if (!on) $("#app").innerHTML = "";
 }
 function subscribe() {
-  const timer = setTimeout(() => setStatus("장부 서버에 아직 연결되지 않았어요. 인터넷 연결을 확인해 주세요.", true), 10000);
+  const timer = setTimeout(() => setStatus("장부 서버에 아직 연결되지 않았어요. 회사 와이파이라면 휴대폰 데이터로도 한 번 열어 봐 주세요.", true), 15000);
   const done = () => { if (S.loaded.m && S.loaded.e && S.loaded.f) { clearTimeout(timer); setStatus(""); } };
   const err = (e) => {
     clearTimeout(timer);
     if (e && e.code === "permission-denied") { setStatus(""); showSignedIn(false); const le = $("#loginerr"); le.hidden = false; le.textContent = `${S.user ? S.user.email : "이 계정"}은(는) 이 가계부에 등록되지 않은 계정이에요. 다른 계정으로 로그인해 주세요.`; unsubs.forEach((u) => u()); unsubs = []; auth.signOut(); }
-    else setStatus("장부를 불러오지 못했어요. 새로고침해 주세요.", true);
+    else setStatus(`장부를 불러오지 못했어요 (${(e && e.code) || "알 수 없는 오류"}). 새로고침해 주세요.`, true);
   };
   unsubs.push(fs.collection(COL.months).onSnapshot((s) => { S.months = Object.fromEntries(s.docs.map((d) => [d.id, d.data()])); if (!s.metadata.fromCache) S.loaded.m = 1; done(); render(); }, err));
   unsubs.push(fs.collection(COL.expenses).onSnapshot((s) => { S.expenses = s.docs.map((d) => ({ id: d.id, ...d.data() })); modelDirty = true; if (!s.metadata.fromCache) S.loaded.e = 1; done(); render(); }, err));
@@ -395,6 +395,8 @@ function boot() {
   if (!window.firebase || !window.WEDDING_FIREBASE_CONFIG) { setStatus("서버 연결 설정을 불러오지 못했어요. 새로고침해 주세요.", true); return; }
   const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(window.WEDDING_FIREBASE_CONFIG);
   auth = app.auth(); fs = app.firestore();
+  // 회사·공용 와이파이처럼 실시간 연결(WebChannel)을 막는 망에서도 붙도록 자동으로 롱폴링으로 전환
+  try { fs.settings({ experimentalAutoDetectLongPolling: true, merge: true }); } catch (e) {}
   try { fs.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}
   if (/KAKAOTALK|Instagram|FBAN|FBAV|Line\//i.test(navigator.userAgent)) $("#inapp").hidden = false;
   $("#signin").addEventListener("click", async () => {
