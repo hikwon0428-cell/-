@@ -133,3 +133,6 @@ form.quick{display:grid;grid-template-columns:minmax(0,1.6fr) 9em 6.5em auto;gap
   .monthbar .lbl{font-size:20px;min-width:0}
 }
 @media (prefers-reduced-motion:no-preference){.bar>i,.hbar .track i{transition:width .3s}}
+.filebtn{display:inline-block;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
+.filebtn:hover{border-color:var(--muted)}
+.filebtn:focus-within{outline:2px solid var(--accent);outline-offset:1px}

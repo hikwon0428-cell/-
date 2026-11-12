@@ -57,7 +57,7 @@ function monthView() {
   if (!keys.length && !S.loaded.m) return `<div class="panel empty">장부를 불러오는 중…</div>`;
   if (!keys.length) return `<div class="panel empty">아직 기록된 달이 없어요.<br><br>
     <button class="primary" data-act="newmonth">${keyLabel(currentKey())} 장부 만들기</button><br><br>
-    <span class="small">예전 기록이 담긴 가져오기 파일이 있다면 <label style="text-decoration:underline;cursor:pointer">여기서 올려 주세요<input type="file" accept="application/json,.json" id="importfile" hidden></label>.</span></div>`;
+    <span class="small">예전 기록이 담긴 가져오기 파일이 있다면 <label style="text-decoration:underline;cursor:pointer">여기서 올려 주세요<input type="file" id="importfile" hidden></label>.</span></div>`;
   const k = S.cur, m = S.months[k] || {}; const incomes = m.incomes || [];
   const ex = S.expenses.filter((e) => e.month === k).sort((a, b) => (a.ts || 0) - (b.ts || 0));
   const incT = sum(incomes.map((i) => i.amount)), varT = sum(ex.map((e) => e.amount)), fx = Number(m.fixedTotal) || 0, spend = fx + varT;
@@ -235,7 +235,13 @@ function trendView() {
       </section>
     </div>
     <section class="panel"><h3>전체 기간 분류별 유동비</h3>${cl.map((c) => `<div class="hbar"><span><span class="dot" style="${catBg(c.id)}"></span> ${c.name}</span><span class="track"><i style="${catBg(c.id)};width:${byCat[c.id] / cm * 100}%"></i></span><span class="num" style="text-align:right">${won(byCat[c.id])}</span></div>`).join("") || `<div class="empty">기록이 없어요</div>`}</section>
-  </div>`;
+  </div>
+  ${importPanel()}`;
+}
+function importPanel() {
+  return `<section class="panel" style="margin-top:20px"><h3>예전 기록 가져오기</h3>
+    <p class="small muted" style="margin:0 0 10px">가져오기 파일(.json)을 고르면 그 안의 달·지출·고정비가 들어가요. 같은 달이 이미 있으면 파일 내용으로 바뀌어요.</p>
+    <label class="filebtn">파일 고르기<input type="file" id="importfile" hidden></label></section>`;
 }
 function niceStep(max) { const raw = max / 4; const p = Math.pow(10, Math.floor(Math.log10(raw))); const n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
 
@@ -267,7 +273,7 @@ document.addEventListener("change", (e) => {
   const t = e.target;
   if (t.id === "jump") { S.cur = t.value; S.catFilter = null; render(true); return; }
   if (t.id === "q-who") { S.draft.who = t.value; return; }
-  if (t.id === "importfile") { importFile(t.files[0]); return; }
+  if (t.id === "importfile") { importFile(t.files[0]); t.value = ""; window.scrollTo(0, 0); return; }
   if (t.dataset.actChange === "pickcat") { if (t.value) { S.draft.cat = t.value; S.draft.catTouched = true; refreshAi(); } return; }
   const live = t.dataset.live; if (!live || !fs) return; const k = S.cur, m = S.months[k] || {};
   if (live === "park") patchMonth(k, { parking: parse(t.value) });
@@ -359,7 +365,7 @@ async function importFile(file) {
     }
     setStatus(`${all.length}건을 옮겼어요.`); setTimeout(() => setStatus(""), 4000);
   } catch (e) {
-    setStatus(e && e.code === "permission-denied" ? "이 계정은 저장 권한이 없어요." : "파일을 읽지 못했어요. 받은 가져오기 파일(.json)이 맞는지 확인해 주세요.", true);
+    setStatus(e && e.code === "permission-denied" ? "저장 권한이 없어요. Firebase 규칙에 이 구글 계정 이메일이 들어가 있고 '게시'됐는지 확인해 주세요." : "파일을 읽지 못했어요. 받은 가져오기 파일(.json)이 맞는지 확인해 주세요.", true);
   }
 }
 
