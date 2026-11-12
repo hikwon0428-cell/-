@@ -78,7 +78,7 @@ function monthView() {
   </div>
   <div class="summary">
     <div><div class="k">수입 총합</div><div class="v num">${won(incT)}</div><div class="s">이월 포함</div></div>
-    <div><div class="k">지출 합계</div><div class="v num">${won(spend)}</div><div class="s num">고정 ${won(fx)} · 유동 ${won(varT)}</div></div>
+    <div><div class="k">지출 합계</div><div class="v num">${won(spend)}</div><div class="s split"><span>고정 <span class="num">${won(fx)}</span></span><span>유동 <span class="num">${won(varT)}</span></span></div></div>
     <div><div class="k"><label for="park">파킹통장 실제 잔액</label></div><input id="park" class="amt" inputmode="numeric" data-live="park" value="${park == null ? "" : won(park)}" placeholder="25일에 입력"><div class="s">다음 달 이월로 넘어가요</div></div>
     <div><div class="k">차액</div><div class="v num ${gap == null ? "" : Math.abs(gap) <= 100000 ? "gap-ok" : "gap-warn"}">${gap == null ? "–" : won(gap)}</div><div class="s">수입 − 지출 − 파킹통장</div></div>
   </div>

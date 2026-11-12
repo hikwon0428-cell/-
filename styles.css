@@ -19,7 +19,7 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding-bottom:env(safe-area-inset-bottom,0px)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--accent)}
 [hidden]{display:none!important}
-.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
 .wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header.band{background:var(--accent);color:var(--accent-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
 .band .wrap{display:flex;align-items:center;gap:10px;padding-block:12px;flex-wrap:wrap}
@@ -62,8 +62,9 @@ input.amt{font-family:var(--f-num);text-align:right}
 .summary>div{padding:14px 16px;border-right:1px solid var(--line);min-width:0}
 .summary>div:last-child{border-right:0}
 .summary .k{font-size:12px;color:var(--muted);font-weight:600}
-.summary .v{font-size:20px;font-weight:600;margin-top:2px;overflow-wrap:anywhere}
+.summary .v{font-size:clamp(16px,4.6vw,20px);font-weight:600;margin-top:2px}
 .summary .s{font-size:12px;color:var(--muted);margin-top:2px}
+.summary .split{display:flex;flex-wrap:wrap;gap:0 8px}
 .summary input.amt{width:100%;font-size:18px;font-weight:600;padding:3px 8px;margin-top:2px}
 .pos{color:var(--good)} .neg{color:var(--bad)}
 .gap-ok{color:var(--good)} .gap-warn{color:var(--warn)}
@@ -131,6 +132,11 @@ form.quick{display:grid;grid-template-columns:minmax(0,1.6fr) 9em 6.5em auto;gap
   .row{grid-template-columns:minmax(0,1fr) 8.5em auto}
   .hbar{grid-template-columns:6.5em minmax(0,1fr) 6.8em}
   .monthbar .lbl{font-size:20px;min-width:0}
+  .brand small{display:none}
+  .band .wrap{flex-wrap:nowrap}
+  .num{letter-spacing:-.03em}
+  .summary>div{padding:12px}
+  .exp{gap:8px}
 }
 @media (prefers-reduced-motion:no-preference){.bar>i,.hbar .track i{transition:width .3s}}
 .filebtn{display:inline-block;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
