@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>혜인·진우 가계부</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1d5a48">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="가계부">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="band"><div class="wrap">
+  <div class="brand">혜인·진우 가계부<small>매달 25일 기준</small></div>
+  <div class="me" role="group" aria-label="지금 쓰는 사람" hidden>
+    <button type="button" data-me="혜인">혜인</button>
+    <button type="button" data-me="진우">진우</button>
+  </div>
+  <button type="button" class="signout" id="signout" hidden>로그아웃</button>
+</div></header>
+<nav class="tabs" id="tabs" hidden><div class="wrap">
+  <a href="#month" data-v="month">이번 달</a>
+  <a href="#fixed" data-v="fixed">고정비</a>
+  <a href="#invest" data-v="invest">투자</a>
+  <a href="#trend" data-v="trend">흐름</a>
+</div></nav>
+<main class="wrap">
+  <div id="status" class="status">불러오는 중…</div>
+  <section id="login" class="login" hidden>
+    <h1>우리 둘만 보는 가계부</h1>
+    <p>등록된 구글 계정으로 로그인해야 열려요.</p>
+    <button type="button" class="primary big" id="signin">Google로 로그인</button>
+    <p class="small muted" id="inapp" hidden>카카오톡·인스타 안에서 열면 구글 로그인이 막혀요. 오른쪽 위 메뉴에서 <b>다른 브라우저로 열기</b>(크롬·사파리)를 눌러 주세요.</p>
+    <p class="small err" id="loginerr" hidden></p>
+  </section>
+  <div id="app"></div>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="categorizer.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
